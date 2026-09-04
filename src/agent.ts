@@ -1,17 +1,33 @@
 import { StateGraph, START, END, MessagesAnnotation } from "@langchain/langgraph";
 import { llm } from "./config/llm.js";
+import {
+    ToolNode,
+    toolsCondition
+} from "@langchain/langgraph/prebuilt";
+import { composio } from "./config/composio.js";
+
+const session = await composio.sessions.create("user_123", {
+    toolkits: ["googlesheets"],
+});
+
+const tools = await session.tools();
+const llmWithTools = llm.bindTools(tools);
 
 const callModel = async (state: typeof MessagesAnnotation.State) => {
-    const response = await llm.invoke(state.messages);
+    const response = await llmWithTools.invoke(state.messages);
 
     return {
         messages: [response]
     };
 };
 
+const toolNode = new ToolNode(tools);
+
 const graph = new StateGraph(MessagesAnnotation)
     .addNode("model", callModel)
+    .addNode("tools", toolNode)
     .addEdge(START, "model")
-    .addEdge("model", END);
+    .addConditionalEdges("model", toolsCondition)
+    .addEdge("tools", "model");
 
 export const agent = graph.compile();
