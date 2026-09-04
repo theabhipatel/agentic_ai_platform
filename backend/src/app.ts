@@ -2,9 +2,11 @@ import 'dotenv/config'
 import express from "express";
 import { HumanMessage } from "@langchain/core/messages";
 import { agent } from './agent.js';
+import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (_req, res) => {
