@@ -5,6 +5,7 @@ import {
     toolsCondition
 } from "@langchain/langgraph/prebuilt";
 import { composio } from "./config/composio.js";
+import { MemorySaver } from "@langchain/langgraph-checkpoint";
 
 const session = await composio.sessions.create("user_123", {
     toolkits: ["googlesheets"],
@@ -30,4 +31,6 @@ const graph = new StateGraph(MessagesAnnotation)
     .addConditionalEdges("model", toolsCondition)
     .addEdge("tools", "model");
 
-export const agent = graph.compile();
+
+const checkpointer = new MemorySaver();
+export const agent = graph.compile({ checkpointer });

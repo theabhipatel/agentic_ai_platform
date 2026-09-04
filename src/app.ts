@@ -21,7 +21,12 @@ app.post("/api/chat", async (req, res) => {
             messages: [
                 new HumanMessage(message)
             ]
-        });
+        }, {
+            configurable: {
+                thread_id: "user_123"
+            }
+        }
+        );
 
         res.json({
             response: response.messages.at(-1)?.content
