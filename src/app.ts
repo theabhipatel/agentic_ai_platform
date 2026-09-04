@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import express from "express";
 import { HumanMessage } from "@langchain/core/messages";
-import { llm } from "./config/llm.js";
+import { agent } from './agent.js';
 
 const app = express();
 
@@ -17,12 +17,14 @@ app.post("/api/chat", async (req, res) => {
     try {
         const { message } = req.body;
 
-        const response = await llm.invoke([
-            new HumanMessage(message)
-        ]);
+        const response = await agent.invoke({
+            messages: [
+                new HumanMessage(message)
+            ]
+        });
 
         res.json({
-            response: response.content
+            response: response.messages.at(-1)?.content
         });
     } catch (error) {
         console.error(error);
@@ -34,3 +36,4 @@ app.post("/api/chat", async (req, res) => {
 });
 
 export default app;
+
