@@ -1,3 +1,6 @@
+// openrouter request response logger via fetch , un comment it when you need to see req and res to llm
+// import "./openrouter-logger.js"; 
+
 import { ChatOpenRouter } from "@langchain/openrouter";
 
 export const llm = new ChatOpenRouter({
