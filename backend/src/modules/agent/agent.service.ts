@@ -9,10 +9,9 @@ import {
     toolsCondition,
 } from "@langchain/langgraph/prebuilt";
 
-import { MemorySaver } from "@langchain/langgraph-checkpoint";
-
 import { llm } from "../../config/llm.js";
 import { getUserTools } from "./composio.service.js";
+import { checkpointer } from "./agent.checkpointer.js";
 
 
 export const createAgent = async (userId: string) => {
@@ -41,7 +40,6 @@ export const createAgent = async (userId: string) => {
         .addConditionalEdges("model", toolsCondition)
         .addEdge("tools", "model");
 
-    const checkpointer = new MemorySaver();
 
     return graph.compile({
         checkpointer,
