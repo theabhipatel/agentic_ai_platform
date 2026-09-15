@@ -1,3 +1,5 @@
-import { MemorySaver } from "@langchain/langgraph-checkpoint";
+import { PostgresSaver } from "@langchain/langgraph-checkpoint-postgres";
 
-export const checkpointer = new MemorySaver();
+import { pool } from "../../db/index.js";
+
+export const checkpointer = new PostgresSaver(pool);
