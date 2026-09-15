@@ -3,6 +3,7 @@ import express from "express";
 import { HumanMessage } from "@langchain/core/messages";
 import { agent } from './agent.js';
 import cors from "cors";
+import authRouter from './modules/auth/auth.routes.js';
 
 const app = express();
 
@@ -14,6 +15,8 @@ app.get("/", (_req, res) => {
         message: "AI Agent API is running"
     });
 });
+
+app.use("/api/auth", authRouter);
 
 app.post("/api/chat", async (req, res) => {
     try {
