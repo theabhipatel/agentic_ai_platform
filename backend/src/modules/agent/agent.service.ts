@@ -12,14 +12,11 @@ import {
 import { MemorySaver } from "@langchain/langgraph-checkpoint";
 
 import { llm } from "../../config/llm.js";
-import { composio } from "../../config/composio.js";
+import { getUserTools } from "./composio.service.js";
+
 
 export const createAgent = async (userId: string) => {
-    const session = await composio.sessions.create(userId, {
-        toolkits: ["googlesheets"],
-    });
-
-    const tools = await session.tools();
+    const { tools } = await getUserTools(userId);
 
     const llmWithTools = llm.bindTools(tools);
 
