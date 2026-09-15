@@ -7,6 +7,7 @@ const envSchema = z.object({
     DATABASE_URL: z.string().min(1),
 
     OPENROUTER_API_KEY: z.string().min(1),
+    MODEL_NAME: z.string().min(1),
 
     COMPOSIO_API_KEY: z.string().min(1),
 
@@ -25,6 +26,7 @@ export const env = {
     port: parsedEnv.data.PORT,
     databaseUrl: parsedEnv.data.DATABASE_URL,
     openRouterApiKey: parsedEnv.data.OPENROUTER_API_KEY,
+    modelName: parsedEnv.data.MODEL_NAME,
     composioApiKey: parsedEnv.data.COMPOSIO_API_KEY,
     jwtSecret: parsedEnv.data.JWT_SECRET,
 };

@@ -5,7 +5,7 @@ import { ChatOpenRouter } from "@langchain/openrouter";
 import { env } from "./env.js";
 
 export const llm = new ChatOpenRouter({
-    model: "inclusionai/ling-3.0-flash-fin:free",
+    model: env.modelName,
     temperature: 0,
     apiKey: env.openRouterApiKey
 });
