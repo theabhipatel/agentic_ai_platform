@@ -2,9 +2,10 @@
 // import "./openrouter-logger.js"; 
 
 import { ChatOpenRouter } from "@langchain/openrouter";
+import { env } from "./env.js";
 
 export const llm = new ChatOpenRouter({
-    model: "minimax/minimax-m3:free",
+    model: "inclusionai/ling-3.0-flash-fin:free",
     temperature: 0,
-    apiKey: process.env.OPENROUTER_API_KEY!
+    apiKey: env.openRouterApiKey
 });

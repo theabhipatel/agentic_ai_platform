@@ -1,7 +1,8 @@
 import { Composio } from "@composio/core";
 import { LangchainProvider } from "@composio/langchain";
+import { env } from "./env.js";
 
 export const composio = new Composio({
-    apiKey: process.env.COMPOSIO_API_KEY ?? null,
+    apiKey: env.composioApiKey,
     provider: new LangchainProvider(),
 });
