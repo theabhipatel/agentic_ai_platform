@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import {
     createConversation,
+    deleteConversation,
     getConversationMessages,
     getUserConversation,
     getUserConversations,
@@ -116,6 +117,38 @@ export const getConversationMessagesController = async (
 
         res.status(500).json({
             error: "Failed to get conversation messages",
+        });
+    }
+};
+
+export const deleteConversationController = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const userId = req.user!.userId;
+
+        const conversationId =
+            req.params.conversationId as string;
+
+        const deleted = await deleteConversation(
+            userId,
+            conversationId
+        );
+
+        if (!deleted) {
+            res.status(404).json({
+                error: "Conversation not found",
+            });
+            return;
+        }
+
+        res.status(204).send();
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            error: "Failed to delete conversation",
         });
     }
 };

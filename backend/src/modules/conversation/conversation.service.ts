@@ -8,6 +8,7 @@ import type {
 } from "./conversation.schema.js";
 import { createAgent } from "../agent/agent.service.js";
 import type { BaseMessage } from "@langchain/core/messages";
+import { checkpointer } from "../agent/agent.checkpointer.js";
 
 export const createConversation = async (
     userId: string,
@@ -121,4 +122,33 @@ const serializeMessage = (message: BaseMessage) => {
         role,
         content: message.content,
     };
+};
+
+export const deleteConversation = async (
+    userId: string,
+    conversationId: string
+) => {
+    const conversation = await getUserConversation(
+        userId,
+        conversationId
+    );
+
+    if (!conversation) {
+        return false;
+    }
+
+    // Delete LangGraph checkpoint/thread
+    await checkpointer.deleteThread(conversationId);
+
+    // Delete application conversation
+    await db
+        .delete(conversations)
+        .where(
+            and(
+                eq(conversations.id, conversationId),
+                eq(conversations.userId, userId)
+            )
+        );
+
+    return true;
 };

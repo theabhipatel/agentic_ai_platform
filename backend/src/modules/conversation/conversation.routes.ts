@@ -6,6 +6,7 @@ import { validate } from "../../middleware/validate.middleware.js";
 
 import {
     createConversationController,
+    deleteConversationController,
     getConversationController,
     getConversationMessagesController,
     getConversationsController,
@@ -43,6 +44,11 @@ conversationRouter.get(
     getConversationController
 );
 
+conversationRouter.delete(
+    "/:conversationId",
+    validate(conversationIdSchema),
+    deleteConversationController
+);
 
 
 export default conversationRouter;
