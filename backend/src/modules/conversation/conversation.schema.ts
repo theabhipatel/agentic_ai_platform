@@ -11,7 +11,7 @@ export const createConversationSchema = z.object({
 });
 
 export const conversationIdSchema = z.object({
-    body: z.object({}),
+    body: z.object({}).optional(),
 
     params: z.object({
         conversationId: z.uuid(),

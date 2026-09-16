@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import {
     createConversation,
+    getConversationMessages,
     getUserConversation,
     getUserConversations,
 } from "./conversation.service.js";
@@ -81,6 +82,40 @@ export const getConversationController = async (
 
         res.status(500).json({
             error: "Failed to get conversation",
+        });
+    }
+};
+
+export const getConversationMessagesController = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const userId = req.user!.userId;
+
+        const conversationId =
+            req.params.conversationId as string;
+
+        const messages = await getConversationMessages(
+            userId,
+            conversationId
+        );
+
+        if (messages === null) {
+            res.status(404).json({
+                error: "Conversation not found",
+            });
+            return;
+        }
+
+        res.status(200).json({
+            messages,
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            error: "Failed to get conversation messages",
         });
     }
 };
