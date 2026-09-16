@@ -7,6 +7,7 @@ import type {
     CreateConversationInput,
 } from "./conversation.schema.js";
 import { createAgent } from "../agent/agent.service.js";
+import type { BaseMessage } from "@langchain/core/messages";
 
 export const createConversation = async (
     userId: string,
@@ -75,5 +76,49 @@ export const getConversationMessages = async (
         },
     });
 
-    return state.values.messages;
+    return state.values.messages
+        .filter((message: BaseMessage) => {
+            // Don't expose intermediate tool-call messages
+            if (
+                message.type === "ai" &&
+                !message.content
+            ) {
+                return false;
+            }
+
+            // Don't expose raw tool results to the frontend
+            if (message.type === "tool") {
+                return false;
+            }
+
+            return true;
+        })
+        .map(serializeMessage);
+};
+
+const serializeMessage = (message: BaseMessage) => {
+    let role: "user" | "assistant" | "tool";
+
+    switch (message.type) {
+        case "human":
+            role = "user";
+            break;
+
+        case "ai":
+            role = "assistant";
+            break;
+
+        case "tool":
+            role = "tool";
+            break;
+
+        default:
+            role = "tool";
+    }
+
+    return {
+        id: message.id,
+        role,
+        content: message.content,
+    };
 };
