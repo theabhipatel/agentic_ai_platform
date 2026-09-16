@@ -7,13 +7,12 @@ export const chatController = async (
     res: Response
 ) => {
     try {
-        const { message, threadId } = req.body;
-
         const userId = req.user!.userId;
+        const { message, conversationId } = req.body;
 
         const response = await chat(
             userId,
-            threadId,
+            conversationId,
             message
         );
 
@@ -22,6 +21,18 @@ export const chatController = async (
         });
     } catch (error) {
         console.error(error);
+
+        if (
+            error instanceof Error &&
+            error.message === "Conversation not found"
+        ) {
+            res.status(404).json({
+                error: error.message,
+            });
+
+            return;
+        }
+
 
         res.status(500).json({
             error: "Something went wrong",
