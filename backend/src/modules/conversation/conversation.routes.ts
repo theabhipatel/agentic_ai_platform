@@ -6,10 +6,12 @@ import { validate } from "../../middleware/validate.middleware.js";
 
 import {
     createConversationController,
+    getConversationController,
     getConversationsController,
 } from "./conversation.controller.js";
 
 import {
+    conversationIdSchema,
     createConversationSchema,
 } from "./conversation.schema.js";
 
@@ -26,6 +28,12 @@ conversationRouter.post(
 conversationRouter.get(
     "/",
     getConversationsController
+);
+
+conversationRouter.get(
+    "/:conversationId",
+    validate(conversationIdSchema),
+    getConversationController
 );
 
 export default conversationRouter;
