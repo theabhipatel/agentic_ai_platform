@@ -36,6 +36,7 @@ const ChatHome = () => {
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [isGoogleSheetConnected, setIsGoogleSheetConnect] = useState(false)
 
     // =========================================================
     // Load conversations
@@ -429,6 +430,54 @@ const ChatHome = () => {
             "/login";
     };
 
+    const connectGoogleSheets = async () => {
+        try {
+            setError("");
+
+            const response = await axiosClient.get(
+                "/agent/google-sheets/auth"
+            );
+
+            const { redirectUrl } = response.data;
+
+            if (redirectUrl) {
+                window.open(redirectUrl, "_blank");
+            }
+        } catch (error) {
+            console.log(
+                "Google Sheets connection failed:",
+                error
+            );
+
+            setError(
+                "Failed to connect Google Sheets."
+            );
+        }
+    };
+
+
+    const fetchGoogleSheetStatus = async () => {
+        try {
+
+            const response = await axiosClient.get(
+                "/agent/google-sheets/status"
+            );
+
+            const connected = response.data.connected;
+            setIsGoogleSheetConnect(connected)
+
+        } catch (error) {
+            console.log(
+                "Failed to get Google Sheets connection status",
+                error
+            );
+        }
+    }
+
+    useEffect(() => {
+        fetchGoogleSheetStatus()
+    }, [])
+
     // =========================================================
     // Current conversation
     // =========================================================
@@ -439,6 +488,9 @@ const ChatHome = () => {
                 conversation.id ===
                 selectedConversationId
         );
+
+
+
 
     return (
         <div
@@ -652,6 +704,73 @@ const ChatHome = () => {
                             : "border-gray-200"
                             }`}
                     >
+                        {/* Connect Google Sheet  */}
+                        <div className="px-3 pb-3">
+
+
+                            {isGoogleSheetConnected ? (
+                                <div className="flex gap-2 w-full items-center justify-center bg-emerald-500/10 p-2 rounded-md" >
+                                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
+                                        <svg
+                                            width="15"
+                                            height="15"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <rect
+                                                x="3"
+                                                y="3"
+                                                width="18"
+                                                height="18"
+                                                rx="2"
+                                            />
+                                            <path d="M8 3v18" />
+                                            <path d="M3 8h18" />
+                                        </svg>
+
+                                    </div>
+                                    <span className="text-[12px] text-green-700"> Google Sheets Connected</span>
+
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={connectGoogleSheets}
+                                    className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition ${darkMode
+                                        ? "border-white/[0.08] bg-white/[0.025] hover:bg-white/[0.06]"
+                                        : "border-gray-200 bg-gray-50 hover:bg-gray-100"
+                                        }`}
+                                >
+                                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
+                                        <svg
+                                            width="15"
+                                            height="15"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <rect
+                                                x="3"
+                                                y="3"
+                                                width="18"
+                                                height="18"
+                                                rx="2"
+                                            />
+                                            <path d="M8 3v18" />
+                                            <path d="M3 8h18" />
+                                        </svg>
+                                    </div>
+                                    Connect Google Sheets
+
+                                </button>
+                            )}
+                        </div>
 
                         {/* Theme */}
 

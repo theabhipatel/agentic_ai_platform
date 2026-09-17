@@ -26,3 +26,27 @@ export const authorizeGoogleSheets = async (userId: string) => {
 
     return connection.redirectUrl;
 };
+
+
+export const getGoogleSheetsStatus = async (
+    userId: string
+) => {
+    const session = await composio.sessions.create(
+        userId,
+        {
+            toolkits: ["googlesheets"],
+        }
+    );
+
+    const result = await session.toolkits();
+
+    const googleSheets = result.items.find(
+        (toolkit) =>
+            toolkit.slug === "googlesheets"
+    );
+
+    return {
+        connected:
+            googleSheets?.connection?.isActive === true,
+    };
+};
