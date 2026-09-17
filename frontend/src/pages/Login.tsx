@@ -27,8 +27,10 @@ const Login = () => {
 
             localStorage.setItem(
                 "accessToken",
-                data.accessToken
+                data.token
             );
+
+            console.log("data ==>", data)
 
             navigate("/");
         } catch (error: any) {

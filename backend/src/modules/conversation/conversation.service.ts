@@ -78,7 +78,7 @@ export const getConversationMessages = async (
     });
 
     return state.values.messages
-        .filter((message: BaseMessage) => {
+        ?.filter((message: BaseMessage) => {
             // Don't expose intermediate tool-call messages
             if (
                 message.type === "ai" &&

@@ -17,7 +17,7 @@ export interface AuthResponse {
         name: string;
         email: string;
     };
-    accessToken: string;
+    token: string;
 }
 
 export const signup = async (

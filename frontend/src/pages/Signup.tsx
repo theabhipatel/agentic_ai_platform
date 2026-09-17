@@ -29,7 +29,7 @@ const Signup = () => {
 
             localStorage.setItem(
                 "accessToken",
-                data.accessToken
+                data.token
             );
 
             navigate("/");
