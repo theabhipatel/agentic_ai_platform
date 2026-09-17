@@ -11,8 +11,12 @@ export const signupSchema = z.object({
 });
 
 export const loginSchema = z.object({
-    email: z.email(),
-    password: z.string().min(1),
+    body: z.object({
+        email: z.email(),
+        password: z.string().min(4).max(100),
+    }),
+    params: z.object({}),
+    query: z.object({}),
 });
 
 export type SignupInput = z.infer<typeof signupSchema>;
