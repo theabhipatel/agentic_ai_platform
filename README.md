@@ -2,6 +2,8 @@
 
 A full-stack AI agent app with a chat interface backed by an LLM (via OpenRouter) and tool integrations through Composio (e.g. Google Sheets).
 
+![AI Agent](agent.png)
+
 ## Stack
 
 - **Frontend**: React 19 + TypeScript, Vite, Tailwind CSS, React Router
